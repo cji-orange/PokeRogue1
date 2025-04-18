@@ -1,0 +1,258 @@
+/* Basic styles - will be expanded later */
+body {
+    /* font-family: sans-serif; */ /* Placeholder - replace with pixel font */
+    font-family: 'Pixelify Sans', monospace; /* EXAMPLE - Replace with your chosen font */
+    margin: 0;
+    padding: 0;
+    background-color: #222; /* Darker background */
+    color: #eee; /* Lighter text */
+}
+
+#game-container {
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #333; /* Darker container */
+    padding: 15px;
+    border: 2px solid #555;
+    box-shadow: 4px 4px 0px rgba(0,0,0,0.4); /* Harder shadow */
+    border-radius: 0; /* Sharp corners */
+}
+
+h1, h2 {
+    color: #fff;
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+/* Add styles for HP bars, sprites, buttons etc. later */
+.hp-bar-container {
+    width: 100px;
+    height: 12px; /* Slightly thicker */
+    border: 1px solid #111; /* Darker border */
+    background-color: #555; /* Dark grey background */
+    margin-bottom: 3px;
+    display: inline-block; /* Align with text */
+    vertical-align: middle;
+    border-radius: 0;
+    overflow: hidden; /* Ensure bar stays within bounds */
+}
+
+.hp-bar {
+    height: 100%;
+    background-color: #4CAF50; /* Green */
+    width: 100%; /* Default to full */
+    transition: width 0.5s ease-out; /* Smooth transition */
+    border-radius: 0;
+}
+
+/* HP Bar Color Classes */
+.hp-bar.low {
+    background-color: #FFC107; /* Yellow */
+}
+.hp-bar.critical {
+    background-color: #F44336; /* Red */
+}
+
+img {
+    max-width: 64px; /* Example size */
+    max-height: 64px;
+    vertical-align: middle;
+    image-rendering: pixelated; /* Keep pixel art sharp */
+    image-rendering: -moz-crisp-edges; /* Firefox */
+    image-rendering: crisp-edges; /* Standard */
+    background-color: #444; /* Placeholder background if image fails */
+    border: 1px solid #666;
+}
+
+button {
+    padding: 8px 15px;
+    margin: 5px;
+    cursor: pointer;
+    background-color: #555;
+    color: #eee;
+    border: 1px solid #777;
+    border-radius: 0;
+    font-family: inherit; /* Use body font */
+    font-size: 1em;
+    transition: background-color 0.2s;
+}
+
+button:hover {
+    background-color: #666;
+    border-color: #999;
+}
+
+button:active {
+    background-color: #444;
+}
+
+#starter-options {
+    text-align: center;
+}
+
+#starter-options div, #party-display .party-member {
+    display: inline-block;
+    margin: 10px;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    border: 2px solid #555;
+    transition: background-color 0.2s;
+    min-width: 80px; /* Ensure some width */
+}
+
+#starter-options div:hover, #party-display .party-member:hover {
+    background-color: #444;
+    border-color: #888;
+}
+
+#party-display .party-member p {
+    margin: 3px 0;
+    font-size: 0.9em;
+}
+
+/* Optional EXP Bar Styling */
+.exp-bar-container {
+    width: 80%; /* Match width of HP bar or adjust */
+    height: 6px; /* Slimmer than HP bar */
+    border: 1px solid #111;
+    background-color: #555;
+    margin: 3px auto;
+    border-radius: 0;
+    overflow: hidden;
+}
+
+.exp-bar {
+    height: 100%;
+    background-color: #00bcd4; /* Cyan/Blue color for EXP */
+    width: 0%; /* Start at 0 */
+    transition: width 0.5s ease-out;
+    border-radius: 0;
+}
+
+#party-display .party-member small {
+    font-size: 0.8em;
+    color: #bbb;
+}
+
+#battle-log p.level-up {
+    color: #FFC107; /* Yellow highlight for level up message */
+    font-weight: bold;
+}
+
+#battle-area {
+    border: 2px dashed #666; /* Dashed border for battle */
+    padding: 15px;
+    margin-top: 15px;
+    background-color: #2a2a2a;
+    position: relative; /* For potential absolute positioning inside */
+    min-height: 250px; /* Ensure some space */
+    display: grid; /* Use grid for layout */
+    grid-template-areas:
+        "opponent opponent"
+        "player player"
+        "log log"
+        "actions actions";
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto 1fr auto; /* Allocate space */
+    gap: 10px;
+}
+
+#opponent-display {
+    grid-area: opponent;
+    text-align: right;
+    padding-right: 20px;
+}
+
+#player-display {
+    grid-area: player;
+    text-align: left;
+    padding-left: 20px;
+}
+
+#opponent-display img {
+    /* Potentially flip opponent sprite */
+    /* transform: scaleX(-1); */
+}
+
+#opponent-display span,
+#player-display span {
+    display: block; /* Put name/level on separate line */
+    margin-bottom: 5px;
+}
+
+
+#battle-log {
+    grid-area: log;
+    margin-top: 10px;
+    border: 1px solid #444;
+    background-color: #1e1e1e;
+    padding: 5px 10px;
+    height: 80px; /* Slightly taller log */
+    overflow-y: scroll;
+    font-size: 0.9em;
+}
+
+#battle-log p {
+    margin: 2px 0;
+    padding: 1px;
+}
+
+#action-buttons {
+    grid-area: actions;
+    text-align: center;
+    padding-top: 10px;
+}
+
+#map-area {
+    text-align: center;
+    padding: 20px;
+}
+
+#inventory-display {
+    position: fixed; /* Overlay */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(30, 30, 30, 0.95); /* Semi-transparent dark background */
+    border: 2px solid #777;
+    padding: 20px;
+    z-index: 100; /* Ensure it's on top */
+    min-width: 300px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+#inventory-display h2 {
+    margin-top: 0;
+}
+
+.item-card {
+    background-color: #444;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #666;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.item-card small {
+    display: block;
+    margin-top: 5px;
+    color: #ccc;
+    font-size: 0.8em;
+}
+
+#close-inventory-button {
+    margin-top: 15px;
+    display: block; /* Make it block level */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#game-over-screen {
+    text-align: center;
+    padding: 40px;
+} 
