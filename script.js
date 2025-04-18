@@ -1,8 +1,8 @@
 // --- Supabase Setup ---
 // IMPORTANT: Replace with your actual Supabase URL and Anon Key
 // For deployment (e.g., Vercel), use environment variables!
-const SUPABASE_URL = 'YOUR_SUPABASE_URL'; // Replace!
-const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // Replace!
+const SUPABASE_URL = 'https://rbsydvkhcbnjbjhtaqbs.supabase.co'; // Replace!
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJic3lkdmtoY2JuamJqaHRhcWJzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ5ODIzMzMsImV4cCI6MjA2MDU1ODMzM30.nkpkT0MzbeOLfIdIxdCA1ijNL9v_DSoPL8oPga1yp7o'; // Replace!
 
 let supabase = null;
 try {
@@ -367,7 +367,7 @@ function displayStarters() {
             const starterDiv = document.createElement('div');
             starterDiv.classList.add('starter-choice');
             starterDiv.innerHTML = `
-                <img src="${pkm.sprite}" alt="${pkm.name}" onerror="this.src='assets/sprites/placeholder.png';">
+                // <img src="${pkm.sprite}" alt="${pkm.name}" onerror="this.src='assets/sprites/placeholder.png';">
                 <p>${pkm.name}</p>
             `;
             starterDiv.addEventListener('click', () => startNewRun(id));
@@ -468,7 +468,7 @@ function updatePartyDisplay() {
         pkmDiv.classList.add('party-member');
         const expPercentage = pkm.expToNextLevel > 0 ? Math.min(100, (pkm.exp / pkm.expToNextLevel) * 100) : 0;
         pkmDiv.innerHTML = `
-            <img src="${pkm.sprite}" alt="${pkm.name}" onerror="this.src='assets/sprites/placeholder.png';">
+            // <img src="${pkm.sprite}" alt="${pkm.name}" onerror="this.src='assets/sprites/placeholder.png';">
             <p>${pkm.name} (Lvl ${pkm.level})</p>
             <p>HP: ${pkm.currentHp} / ${pkm.stats.maxHp}</p>
             <div class="exp-bar-container">
@@ -583,20 +583,22 @@ function startBattle(opponentPokemon) {
         opponentStatStages: { atk: 0, def: 0, speed: 0, accuracy: 0, evasion: 0 },
     };
 
+    // Update Battle UI (Opponent)
     if(opponentName) opponentName.textContent = `${opponentPokemon.name} Lvl ${opponentPokemon.level}`;
     updateHpBar(opponentHpBar, opponentPokemon.currentHp, opponentPokemon.stats.maxHp);
     if(opponentHpValue) opponentHpValue.textContent = `${opponentPokemon.currentHp} / ${opponentPokemon.stats.maxHp}`;
     if(opponentSprite) {
-        opponentSprite.src = opponentPokemon.sprite;
-        opponentSprite.onerror = () => { opponentSprite.src = 'assets/sprites/placeholder.png'; };
+        // opponentSprite.src = opponentPokemon.sprite;
+        // opponentSprite.onerror = () => { opponentSprite.src = 'assets/sprites/placeholder.png'; };
     }
 
+    // Update Battle UI (Player)
     if(playerName) playerName.textContent = `${playerPokemon.name} Lvl ${playerPokemon.level}`;
     updateHpBar(playerHpBar, playerPokemon.currentHp, playerPokemon.stats.maxHp);
     if(playerHpValue) playerHpValue.textContent = `${playerPokemon.currentHp} / ${playerPokemon.stats.maxHp}`;
     if(playerSprite) {
-        playerSprite.src = playerPokemon.sprite;
-        playerSprite.onerror = () => { playerSprite.src = 'assets/sprites/placeholder.png'; };
+        // playerSprite.src = playerPokemon.sprite;
+        // playerSprite.onerror = () => { playerSprite.src = 'assets/sprites/placeholder.png'; };
     }
 
     if(battleArea) battleArea.style.display = 'block';
