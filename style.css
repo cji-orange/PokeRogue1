@@ -100,6 +100,7 @@ button:active {
     border: 2px solid #555;
     transition: background-color 0.2s;
     min-width: 80px; /* Ensure some width */
+    vertical-align: top;
 }
 
 #starter-options div:hover, #party-display .party-member:hover {
@@ -163,12 +164,18 @@ button:active {
     grid-area: opponent;
     text-align: right;
     padding-right: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
 }
 
 #player-display {
     grid-area: player;
     text-align: left;
     padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 #opponent-display img {
@@ -255,4 +262,101 @@ button:active {
 #game-over-screen {
     text-align: center;
     padding: 40px;
-} 
+}
+
+/* --- Pokemon Sprite Animation --- */
+.sprite-container {
+    display: inline-block; 
+    vertical-align: middle;
+    margin-bottom: 5px;
+}
+
+.pokemon-sprite {
+    /* Define general background properties */
+    background-repeat: no-repeat;
+    background-position: center center; /* Center the sprite */
+    background-size: contain; /* Scale sprite down to fit container */
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-crisp-edges;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    background-color: transparent; /* Show background through if needed */
+    /* Dimensions W/H set by specific classes below */
+}
+
+/* Remove ALL @keyframes sprite-cycle definitions */
+/* @keyframes caterpie-cycle { ... } */
+/* @keyframes ekans-cycle { ... } */
+/* ... etc ... */
+
+/* --- Specific Pokemon Dimensions (Placeholder widths based on max from sheet, heights from file) --- */
+/* NOTE: Actual width of individual frame files might vary. Use JS to potentially adjust container size? Or keep fixed based on text file heights? */
+/* Using heights from file, keeping estimated max widths from previous attempts */
+
+.sprite-pkm010 { /* Caterpie */
+    width: 160px; 
+    height: 210px;
+    /* Removed animation */
+}
+
+.sprite-pkm023 { /* Ekans */
+    width: 150px;
+    height: 174px;
+    /* Removed animation */
+}
+
+.sprite-pkm029 { /* Nidoran F */
+    width: 194px;
+    height: 182px;
+    /* Removed animation */
+}
+
+.sprite-pkm032 { /* Nidoran M */
+    width: 140px;
+    height: 168px;
+    /* Removed animation */
+}
+
+.sprite-pkm016 { /* Pidgey */
+    width: 216px;
+    height: 194px;
+    /* Removed animation */
+}
+
+.sprite-pkm019 { /* Rattata */
+    width: 160px;
+    height: 190px;
+    /* Removed animation */
+}
+
+.sprite-pkm027 { /* Sandshrew */
+    width: 185px; /* Using previous effective width */
+    height: 196px;
+    /* Removed animation */
+}
+
+.sprite-pkm021 { /* Spearow */
+    width: 130px;
+    height: 214px;
+    /* Removed animation */
+}
+
+.sprite-pkm013 { /* Weedle */
+    width: 170px;
+    height: 158px; /* Note: Height from file was 248, but that seems very large? Using previous 158. Verify. */
+    /* Removed animation */
+}
+
+.sprite-pkm041 { /* Zubat */
+    width: 265px;
+    height: 202px;
+    /* Removed animation */
+}
+
+/* Default/Placeholder dimensions for others */
+.sprite-pkm001, .sprite-pkm004, .sprite-pkm007, .sprite-pkm025 { 
+    width: 64px; height: 64px; 
+    /* Removed animation */
+}
+
+/* --- End Pokemon Sprite Animation --- */ 

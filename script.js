@@ -50,21 +50,21 @@ const itemData = {
 // Placeholder Move Data
 const moveData = {
     'Tackle': { power: 40, type: 'Normal' },
-    'Growl': { effect: 'lower_atk', power: 0, accuracy: 100, type: 'Normal', target: 'opponent', stat: 'atk', stages: -1 },
+    'Growl': { effect: 'lower_stat', power: 0, accuracy: 100, type: 'Normal', target: 'opponent', stat: 'atk', stages: -1 },
     'Vine Whip': { power: 45, accuracy: 100, type: 'Grass' },
     'Scratch': { power: 40, accuracy: 100, type: 'Normal' },
     'Ember': { power: 40, accuracy: 100, type: 'Fire' },
-    'Tail Whip': { effect: 'lower_def', power: 0, accuracy: 100, type: 'Normal', target: 'opponent', stat: 'def', stages: -1 },
+    'Tail Whip': { effect: 'lower_stat', power: 0, accuracy: 100, type: 'Normal', target: 'opponent', stat: 'def', stages: -1 },
     'Water Gun': { power: 40, accuracy: 100, type: 'Water' },
-    'Sand Attack': { effect: 'lower_acc', power: 0, accuracy: 100, type: 'Ground', target: 'opponent', stat: 'accuracy', stages: -1 },
+    'Sand Attack': { effect: 'lower_stat', power: 0, accuracy: 100, type: 'Ground', target: 'opponent', stat: 'accuracy', stages: -1 },
     'Quick Attack': { power: 40, accuracy: 100, type: 'Normal', priority: 1 },
-    'String Shot': { effect: 'lower_spe', power: 0, accuracy: 95, type: 'Bug', target: 'opponent', stat: 'speed', stages: -2 },
+    'String Shot': { effect: 'lower_stat', power: 0, accuracy: 95, type: 'Bug', target: 'opponent', stat: 'speed', stages: -2 },
     'Poison Sting': { power: 15, accuracy: 100, type: 'Poison', effect: 'poison', chance: 0.3 },
     'Gust': { power: 40, accuracy: 100, type: 'Flying' },
     'Peck': { power: 35, accuracy: 100, type: 'Flying' },
-    'Leer': { effect: 'lower_def', power: 0, accuracy: 100, type: 'Normal', target: 'opponent', stat: 'def', stages: -1 },
+    'Leer': { effect: 'lower_stat', power: 0, accuracy: 100, type: 'Normal', target: 'opponent', stat: 'def', stages: -1 },
     'Wrap': { power: 15, accuracy: 90, type: 'Normal', effect: 'trap', duration: [4, 5] },
-    'Defense Curl': { effect: 'raise_def', power: 0, accuracy: null, type: 'Normal', target: 'self', stat: 'def', stages: 1 },
+    'Defense Curl': { effect: 'raise_stat', power: 0, accuracy: null, type: 'Normal', target: 'self', stat: 'def', stages: 1 },
     'Leech Life': { power: 20, accuracy: 100, type: 'Bug', effect: 'drain', drainPercent: 0.5 },
     'Supersonic': { effect: 'confuse', power: 0, accuracy: 55, type: 'Normal', target: 'opponent' },
     'Astonish': { power: 30, accuracy: 100, type: 'Ghost', effect: 'flinch', chance: 0.3 },
@@ -148,7 +148,107 @@ const userDisplayGameover = document.getElementById('user-display-gameover');
 const logoutButtonMap = document.getElementById('logout-button');
 const logoutButtonGameover = document.getElementById('logout-button-gameover');
 
-// --- Initialization & Auth State Handling ---
+// --- Animation Data and Control ---
+
+// Data structure to hold animation details (derived from pokemon_sprites_sizes.txt)
+// NOTE: Assumes pokemonData is loaded and contains lowercase names
+const spriteAnimationData = {
+    // Pokemon ID: { frameCount, pattern: [frame numbers in sequence], name: 'folder_name' }
+    // Corrected Keys to use 'pkmXXX' format
+    'pkm010': { frameCount: 6, pattern: [1, 2, 3, 4, 5, 6, 5, 4, 3, 2], name: 'caterpie' },
+    'pkm023': { frameCount: 12, pattern: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2], name: 'ekans' },
+    'pkm029': { frameCount: 4, pattern: [1, 2, 3, 4, 3, 2], name: 'nidoran_female' }, // Name MUST match folder
+    'pkm032': { frameCount: 4, pattern: [1, 2, 3, 4, 3, 2], name: 'nidoran_male' },   // Name MUST match folder
+    'pkm016': { frameCount: 9, pattern: [1, 2, 3, 4, 5, 6, 7, 8, 9, 8, 7, 6, 5, 4, 3, 2], name: 'pidgey' },
+    'pkm019': { frameCount: 7, pattern: [1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2], name: 'rattata' },
+    'pkm027': { frameCount: 4, pattern: [1, 2, 3, 4, 3, 2], name: 'sandshrew' },
+    'pkm021': { frameCount: 4, pattern: [1, 2, 3, 4, 3, 2], name: 'spearow' },
+    'pkm013': { frameCount: 11, pattern: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2], name: 'weedle' },
+    'pkm041': { frameCount: 4, pattern: [1, 2, 3, 4, 3, 2], name: 'zubat' },
+    // Add entries for starters/Pikachu using 'pkmXXX' keys when data is available
+    // e.g., 'pkm001': { frameCount: X, pattern: [...], name: 'bulbasaur' },
+};
+
+// Object to store active animation intervals
+const activeSpriteIntervals = {};
+
+// Function to start/update sprite animation
+function startSpriteAnimation(spriteElement, pokemonId, uniqueIntervalId) {
+    console.log(`[Sprite Anim] Start request for ID: ${pokemonId}, Element ID: ${uniqueIntervalId}`); // Debug Log
+
+    // Clear existing animation for this element, if any
+    if (activeSpriteIntervals[uniqueIntervalId]) {
+        console.log(`[Sprite Anim] Clearing existing interval: ${uniqueIntervalId}`); // Debug Log
+        clearInterval(activeSpriteIntervals[uniqueIntervalId]);
+        delete activeSpriteIntervals[uniqueIntervalId];
+    }
+
+    const animData = spriteAnimationData[pokemonId]; // Lookup with correct 'pkmXXX' ID
+    let pkmName = null;
+
+    if (animData) {
+        pkmName = animData.name; // Use name directly from animData if found
+        console.log(`[Sprite Anim] Found animData for ${pokemonId}. Name: ${pkmName}`); // Debug Log
+    } else {
+        // Fallback: Try to get name from pokemonData if animData is missing
+        const basePkmData = pokemonData[pokemonId];
+        if (basePkmData) {
+            // Special handling for names that don't map directly to folders
+            if (basePkmData.name === 'Nidoran♀') pkmName = 'nidoran_female';
+            else if (basePkmData.name === 'Nidoran♂') pkmName = 'nidoran_male';
+            // Generic fallback (might be incorrect for some names)
+            else pkmName = basePkmData.name.toLowerCase().replace(' ', '_');
+             console.log(`[Sprite Anim] No animData. Using fallback name from pokemonData: ${pkmName}`); // Debug Log
+        } else {
+            console.error(`[Sprite Anim] ERROR: No animData or pokemonData found for ID: ${pokemonId}`); // Debug Log
+            spriteElement.style.backgroundImage = ''; // Clear potentially wrong image
+            return; // Cannot proceed without data
+        }
+    }
+    
+    // Double-check if pkmName is valid
+    if (!pkmName) {
+         console.error(`[Sprite Anim] ERROR: Could not determine pokemon name/folder for ID: ${pokemonId}`); // Debug Log
+         spriteElement.style.backgroundImage = '';
+         return;
+    }
+
+    const basePath = `pokemon_sprites/${pkmName}_sprites/${pkmName}_`; // Construct base path
+    const defaultFramePath = `${basePath}1.png`; // Path for frame 1
+
+    // If no animation data, just set frame 1 and return
+    if (!animData || animData.pattern.length <= 1) {
+        console.log(`[Sprite Anim] Setting static frame 1 for ${pokemonId}: ${defaultFramePath}`); // Debug Log
+        spriteElement.style.backgroundImage = `url('${defaultFramePath}')`;
+        // You might want to add an error handler here in case frame 1 doesn't load
+        // e.g., check if the image exists before setting
+        return;
+    }
+
+    // --- Animation Logic --- 
+    let currentPatternIndex = 0;
+    const patternLength = animData.pattern.length;
+    const frameInterval = 250; // ms between frames (Increased from 150 for slower FPS)
+
+    // Function to update the frame
+    const updateFrame = () => {
+        const frameNumber = animData.pattern[currentPatternIndex];
+        const framePath = `${basePath}${frameNumber}.png`;
+        // console.log(`[Sprite Anim] Setting frame for ${uniqueIntervalId}: ${framePath}`); // Verbose Debug Log
+        spriteElement.style.backgroundImage = `url('${framePath}')`;
+        currentPatternIndex = (currentPatternIndex + 1) % patternLength;
+    };
+
+    // Set initial frame immediately
+    console.log(`[Sprite Anim] Setting initial frame for ${uniqueIntervalId}: ${defaultFramePath}`); // Debug Log
+    updateFrame(); 
+
+    // Start interval
+    console.log(`[Sprite Anim] Starting interval ${uniqueIntervalId} with ${patternLength} frames.`); // Debug Log
+    activeSpriteIntervals[uniqueIntervalId] = setInterval(updateFrame, frameInterval);
+}
+
+// --- Gameplay State & Initialization ---
 function init() {
     console.log("Game initializing...");
     addEventListeners(); // Setup listeners including auth buttons
@@ -357,21 +457,67 @@ function getTypeEffectiveness(moveType, defenderTypes) {
     return multiplier;
 }
 
+// --- Stat Stage Calculation Helper ---
+const stageMultipliers = {
+    '-6': 2 / 8, // 0.25
+    '-5': 2 / 7, // ~0.28
+    '-4': 2 / 6, // ~0.33
+    '-3': 2 / 5, // 0.4
+    '-2': 2 / 4, // 0.5
+    '-1': 2 / 3, // ~0.66
+    '0': 1,
+    '1': 3 / 2, // 1.5
+    '2': 4 / 2, // 2.0
+    '3': 5 / 2, // 2.5
+    '4': 6 / 2, // 3.0
+    '5': 7 / 2, // 3.5
+    '6': 8 / 2, // 4.0
+};
+
+// Gets the actual stat multiplier based on the stage (-6 to +6)
+function getStatModifier(statStage) {
+    const stage = Math.max(-6, Math.min(6, statStage)); // Clamp stage between -6 and +6
+    return stageMultipliers[stage.toString()] || 1;
+}
+
 // --- Core Game Logic Functions ---
 function displayStarters() {
     if (!starterOptionsContainer) return;
     starterOptionsContainer.innerHTML = ''; // Clear existing options
+
+    // Clear any lingering starter animation intervals
+    Object.keys(activeSpriteIntervals).forEach(key => {
+        if (key.startsWith('starter-sprite-')) {
+            clearInterval(activeSpriteIntervals[key]);
+            delete activeSpriteIntervals[key];
+        }
+    });
+
     starterPokemonIds.forEach(id => {
-        const pkm = pokemonData[id];
-        if (pkm) {
+        const pkmData = pokemonData[id]; // Use pokemonData for name consistency
+        if (pkmData) {
             const starterDiv = document.createElement('div');
             starterDiv.classList.add('starter-choice');
-            starterDiv.innerHTML = `
-                // <img src="${pkm.sprite}" alt="${pkm.name}" onerror="this.src='assets/sprites/placeholder.png';">
-                <p>${pkm.name}</p>
-            `;
+            starterDiv.dataset.pokemonId = id;
+
+            const spriteContainer = document.createElement('div');
+            spriteContainer.classList.add('sprite-container');
+            const spriteDiv = document.createElement('div');
+            // Add specific class for dimensions, but animation handles image
+            spriteDiv.classList.add('pokemon-sprite', `sprite-${id}`); 
+            spriteContainer.appendChild(spriteDiv);
+
+            const nameP = document.createElement('p');
+            nameP.textContent = pkmData.name;
+
+            starterDiv.appendChild(spriteContainer);
+            starterDiv.appendChild(nameP);
+            
             starterDiv.addEventListener('click', () => startNewRun(id));
             starterOptionsContainer.appendChild(starterDiv);
+
+            // Start animation for this starter sprite
+            startSpriteAnimation(spriteDiv, id, `starter-sprite-${id}`);
         }
     });
 }
@@ -450,25 +596,45 @@ function startNewRun(starterPokemonId) {
 }
 
 function logMessage(message, className = null) {
-    if (!battleLog) return;
+    if (!battleLog) { 
+        console.error("logMessage ERROR: battleLog element not found!");
+        return; 
+    }
     const messageElement = document.createElement('p');
     messageElement.textContent = message;
     if (className) {
         messageElement.classList.add(className);
     }
     battleLog.appendChild(messageElement);
+    // Scroll to the bottom
     battleLog.scrollTop = battleLog.scrollHeight;
 }
 
 function updatePartyDisplay() {
     if (!partyDisplayContainer) return;
     partyDisplayContainer.innerHTML = '<h2>Your Party</h2>';
+
+    // Clear any lingering party animation intervals
+    Object.keys(activeSpriteIntervals).forEach(key => {
+        if (key.startsWith('party-sprite-')) {
+            clearInterval(activeSpriteIntervals[key]);
+            delete activeSpriteIntervals[key];
+        }
+    });
+
     gameState.playerParty.forEach((pkm, index) => {
         const pkmDiv = document.createElement('div');
         pkmDiv.classList.add('party-member');
+        
+        const spriteContainer = document.createElement('div');
+        spriteContainer.classList.add('sprite-container');
+        const spriteDiv = document.createElement('div');
+        spriteDiv.classList.add('pokemon-sprite', `sprite-${pkm.id}`);
+        spriteContainer.appendChild(spriteDiv);
+
         const expPercentage = pkm.expToNextLevel > 0 ? Math.min(100, (pkm.exp / pkm.expToNextLevel) * 100) : 0;
-        pkmDiv.innerHTML = `
-            // <img src="${pkm.sprite}" alt="${pkm.name}" onerror="this.src='assets/sprites/placeholder.png';">
+        
+        const infoHtml = `
             <p>${pkm.name} (Lvl ${pkm.level})</p>
             <p>HP: ${pkm.currentHp} / ${pkm.stats.maxHp}</p>
             <div class="exp-bar-container">
@@ -477,7 +643,14 @@ function updatePartyDisplay() {
             <small>EXP: ${pkm.exp} / ${pkm.expToNextLevel}</small>
             ${index === 0 ? '<p><small>(Active)</small></p>' : ''}
         `;
+
+        pkmDiv.appendChild(spriteContainer); 
+        pkmDiv.innerHTML += infoHtml; 
+
         partyDisplayContainer.appendChild(pkmDiv);
+
+        // Start animation for this party member sprite
+        startSpriteAnimation(spriteDiv, pkm.id, `party-sprite-${index}`);
     });
      partyDisplayContainer.innerHTML += `<p>Slots: ${gameState.playerParty.length} / 6</p>`;
 }
@@ -563,53 +736,61 @@ function showMoveSelection(pokemon) {
 }
 
 function startBattle(opponentPokemon) {
-    console.log(`Starting battle against ${opponentPokemon.name}`);
-    if(battleLog) battleLog.innerHTML = '';
-    logMessage(`A wild ${opponentPokemon.name} (Lvl ${opponentPokemon.level}) appeared!`);
-
-    const playerPokemon = gameState.playerParty[0];
-    if (!playerPokemon || playerPokemon.currentHp <= 0) {
-        logMessage("Your leading Pokémon has fainted!");
-        endBattle('loss');
-        return;
+    if (!battleArea) return;
+    logMessage("Battle started!");
+    
+    const playerPokemon = gameState.playerParty[0]; // Assume first party member fights
+    if (!playerPokemon) {
+        logMessage("Error: No player Pokémon available for battle!");
+        return; 
     }
 
+    // Initialize battle state
     gameState.activeBattle = {
-        playerPokemon: playerPokemon,
+        playerPokemon: playerPokemon, 
         opponentPokemon: opponentPokemon,
         turn: 'player',
-        log: [],
-        playerStatStages: { atk: 0, def: 0, speed: 0, accuracy: 0, evasion: 0 },
-        opponentStatStages: { atk: 0, def: 0, speed: 0, accuracy: 0, evasion: 0 },
+        playerStatStages: { atk: 0, def: 0, spa: 0, spd: 0, spe: 0, acc: 0, eva: 0 },
+        opponentStatStages: { atk: 0, def: 0, spa: 0, spd: 0, spe: 0, acc: 0, eva: 0 }
     };
 
-    // Update Battle UI (Opponent)
+    // --- Update Battle UI (Opponent) --- 
     if(opponentName) opponentName.textContent = `${opponentPokemon.name} Lvl ${opponentPokemon.level}`;
     updateHpBar(opponentHpBar, opponentPokemon.currentHp, opponentPokemon.stats.maxHp);
     if(opponentHpValue) opponentHpValue.textContent = `${opponentPokemon.currentHp} / ${opponentPokemon.stats.maxHp}`;
-    if(opponentSprite) {
-        // opponentSprite.src = opponentPokemon.sprite;
-        // opponentSprite.onerror = () => { opponentSprite.src = 'assets/sprites/placeholder.png'; };
+    const opponentSpriteContainer = document.getElementById('opponent-sprite-container');
+    if (opponentSpriteContainer) {
+        const spriteDiv = opponentSpriteContainer.querySelector('.pokemon-sprite');
+        if (spriteDiv) {
+            spriteDiv.className = 'pokemon-sprite'; // Reset classes first
+            spriteDiv.classList.add(`sprite-${opponentPokemon.id}`); // Add specific class for dimensions
+            // Start animation
+            startSpriteAnimation(spriteDiv, opponentPokemon.id, 'opponent-sprite'); 
+        }
     }
 
-    // Update Battle UI (Player)
+    // --- Update Battle UI (Player) --- 
     if(playerName) playerName.textContent = `${playerPokemon.name} Lvl ${playerPokemon.level}`;
     updateHpBar(playerHpBar, playerPokemon.currentHp, playerPokemon.stats.maxHp);
     if(playerHpValue) playerHpValue.textContent = `${playerPokemon.currentHp} / ${playerPokemon.stats.maxHp}`;
-    if(playerSprite) {
-        // playerSprite.src = playerPokemon.sprite;
-        // playerSprite.onerror = () => { playerSprite.src = 'assets/sprites/placeholder.png'; };
+    const playerSpriteContainer = document.getElementById('player-sprite-container');
+    if (playerSpriteContainer) {
+        const spriteDiv = playerSpriteContainer.querySelector('.pokemon-sprite');
+        if (spriteDiv) {
+            spriteDiv.className = 'pokemon-sprite'; // Reset classes first
+            spriteDiv.classList.add(`sprite-${playerPokemon.id}`); // Add specific class for dimensions
+            // Start animation
+            startSpriteAnimation(spriteDiv, playerPokemon.id, 'player-sprite'); 
+        }
     }
-
-    if(battleArea) battleArea.style.display = 'block';
-    if(mapArea) mapArea.style.display = 'none';
-    if(inventoryDisplay) inventoryDisplay.style.display = 'none';
-
+    
+    // Show battle area and initial options
+    if(startScreen) startScreen.style.display = 'none';
+    if(mapArea) mapArea.style.display = 'none'; 
+    battleArea.style.display = 'grid'; 
     logMessage(`Go, ${playerPokemon.name}!`);
-    if (gameState.activeBattle.turn === 'player') {
-        logMessage("What will you do?");
-        showMainBattleActions();
-    }
+    logMessage(`Wild ${opponentPokemon.name} appeared!`);
+    showMainBattleActions();
 }
 
 function showInventory(isBattle = false) {
@@ -635,11 +816,210 @@ function handlePlayerAction(actionType, value = null) {
 }
 
 function playerAttack(moveName) {
-    // Implementation of playerAttack function
+    console.log(`--- playerAttack START: ${moveName} ---`); // Debug Log
+    const battle = gameState.activeBattle;
+    if (!battle) {
+        console.error("playerAttack ERROR: No active battle found!"); // Debug Log
+        return;
+    }
+
+    const attacker = battle.playerPokemon;
+    const defender = battle.opponentPokemon;
+    const move = moveData[moveName];
+    console.log("Player Attack Details:", { attacker: attacker?.name, defender: defender?.name, moveName, move }); // Debug Log
+
+    if (!attacker || !defender) {
+        console.error("playerAttack ERROR: Attacker or Defender is missing!"); // Debug Log
+        return; // Should ideally not happen if battle exists
+    }
+
+    console.log(`Logging message: ${attacker.name} used ${moveName}!`); // Debug Log
+    logMessage(`${attacker.name} used ${moveName}!`);
+
+    if (!move) {
+        console.error(`playerAttack ERROR: Move data not found for ${moveName}!`); // Debug Log
+        logMessage(`Move data error for ${moveName}!`); // Let user know
+        // Proceed to opponent's turn even if move data is missing
+        battle.turn = 'opponent';
+        setTimeout(opponentTurn, 1000);
+        return;
+    }
+
+    // TODO: Add accuracy check here
+    console.log("Accuracy check placeholder..."); // Debug Log
+
+    let damage = 0;
+    let effectivenessMultiplier = 1;
+
+    if (move.power > 0) {
+        console.log("Calculating damage..."); // Debug Log
+        effectivenessMultiplier = getTypeEffectiveness(move.type, defender.types);
+        
+        // --- Incorporate Stat Stages --- 
+        const atkStat = 'atk'; // TODO: Use SpAtk for special moves later
+        const defStat = 'def'; // TODO: Use SpDef for special moves later
+        const attackerAtkStage = battle.playerStatStages[atkStat] || 0;
+        const defenderDefStage = battle.opponentStatStages[defStat] || 0;
+        const atkModifier = getStatModifier(attackerAtkStage);
+        const defModifier = getStatModifier(defenderDefStage);
+        
+        // Apply modifiers to base stats for calculation
+        const effectiveAtk = attacker.stats[atkStat] * atkModifier;
+        const effectiveDef = defender.stats[defStat] * defModifier;
+        
+        damage = Math.max(1, Math.floor((move.power * (effectiveAtk / effectiveDef) / 5) * effectivenessMultiplier));
+        console.log(`Damage calc: Pwr:${move.power}, Atk:${effectiveAtk}(Mod:${atkModifier}), Def:${effectiveDef}(Mod:${defModifier}), Type:${effectivenessMultiplier} => Dmg:${damage}`); // Detailed log
+        // --- End Stat Stage Mod --- 
+
+        console.log(`Logging damage: ${damage}`); // Debug Log
+        logMessage(`It dealt ${damage} damage.`);
+
+        if (effectivenessMultiplier > 1) {
+            logMessage("It's super effective!");
+        } else if (effectivenessMultiplier < 1 && effectivenessMultiplier > 0) {
+            logMessage("It's not very effective...");
+        } else if (effectivenessMultiplier === 0) {
+            logMessage(`It doesn't affect ${defender.name}...`);
+        }
+
+    } else if (move.effect) {
+        console.log("Move has effect (not implemented)"); // Debug Log
+        applyMoveEffect(move, attacker, defender, battle);
+    } else {
+        console.log("Move has no power or effect."); // Debug Log
+        logMessage("But it failed! (No power or effect)");
+    }
+
+    console.log(`Applying ${damage} damage. Defender HP before: ${defender.currentHp}`); // Debug Log
+    defender.currentHp = Math.max(0, defender.currentHp - damage);
+    console.log(`Defender HP after: ${defender.currentHp}`); // Debug Log
+
+    console.log("Updating opponent HP bar..."); // Debug Log
+    updateHpBar(opponentHpBar, defender.currentHp, defender.stats.maxHp);
+    if(opponentHpValue) opponentHpValue.textContent = `${defender.currentHp} / ${defender.stats.maxHp}`;
+
+    if (defender.currentHp <= 0) {
+        console.log("Defender fainted. Ending battle (win)..."); // Debug Log
+        logMessage(`${defender.name} fainted!`);
+        endBattle('win'); // endBattle handles resetting state and UI transitions
+    } else {
+        console.log("Setting turn to opponent and scheduling opponentTurn..."); // Debug Log
+        battle.turn = 'opponent';
+        setTimeout(opponentTurn, 1000);
+    }
+    console.log(`--- playerAttack END: ${moveName} ---`); // Debug Log
 }
 
 function opponentTurn() {
-    // Implementation of opponentTurn function
+    console.log("--- opponentTurn START ---"); // Debug Log
+    const battle = gameState.activeBattle;
+    if (!battle) {
+        console.error("opponentTurn ERROR: No active battle!"); // Debug Log
+        return; 
+    }
+    if (battle.turn !== 'opponent') { 
+        console.warn(`opponentTurn WARNING: Called when turn was ${battle.turn}`); // Debug Log
+        return; // Don't proceed if it's not the opponent's turn
+    }
+
+    if(actionButtonsContainer) actionButtonsContainer.innerHTML = '<p>Opponent is thinking...</p>'; // Show thinking message
+
+    const attacker = battle.opponentPokemon;
+    const defender = battle.playerPokemon;
+    console.log("Opponent Turn Details:", { attacker: attacker?.name, defender: defender?.name }); // Debug Log
+
+    if (!attacker || !defender) {
+        console.error("opponentTurn ERROR: Attacker or Defender is missing!"); // Debug Log
+        // Attempt to recover by setting turn back to player?
+        battle.turn = 'player';
+        logMessage("Error occurred. Your turn.");
+        showMainBattleActions();
+        return;
+    }
+
+    // Simple AI: Choose a random move
+    const moveName = attacker.moves[Math.floor(Math.random() * attacker.moves.length)];
+    const move = moveData[moveName];
+    console.log(`Opponent chose move: ${moveName}`, move); // Debug Log
+
+    console.log(`Logging message: Wild ${attacker.name} used ${moveName}!`); // Debug Log
+    logMessage(`Wild ${attacker.name} used ${moveName}!`);
+
+    if (!move) {
+        console.error(`opponentTurn ERROR: Move data not found for ${moveName}!`); // Debug Log
+        logMessage("Opponent move data error!");
+        // Skip turn if move is invalid, pass back to player
+        battle.turn = 'player';
+        logMessage("What will you do?");
+        showMainBattleActions(); // Regenerate player actions
+        return;
+    }
+
+     // TODO: Add accuracy check here
+     console.log("Opponent Accuracy check placeholder..."); // Debug Log
+
+    let damage = 0;
+    let effectivenessMultiplier = 1;
+
+    if (move.power > 0) {
+        console.log("Opponent calculating damage..."); // Debug Log
+        effectivenessMultiplier = getTypeEffectiveness(move.type, defender.types);
+        
+        // --- Incorporate Stat Stages --- 
+        const atkStat = 'atk'; // TODO: Use SpAtk for special moves later
+        const defStat = 'def'; // TODO: Use SpDef for special moves later
+        const attackerAtkStage = battle.opponentStatStages[atkStat] || 0;
+        const defenderDefStage = battle.playerStatStages[defStat] || 0;
+        const atkModifier = getStatModifier(attackerAtkStage);
+        const defModifier = getStatModifier(defenderDefStage);
+        
+        const effectiveAtk = attacker.stats[atkStat] * atkModifier;
+        const effectiveDef = defender.stats[defStat] * defModifier;
+
+        damage = Math.max(1, Math.floor((move.power * (effectiveAtk / effectiveDef) / 5) * effectivenessMultiplier));
+         console.log(`Opponent Dmg calc: Pwr:${move.power}, Atk:${effectiveAtk}(Mod:${atkModifier}), Def:${effectiveDef}(Mod:${defModifier}), Type:${effectivenessMultiplier} => Dmg:${damage}`); // Detailed log
+        // --- End Stat Stage Mod --- 
+
+        console.log(`Logging opponent damage: ${damage}`); // Debug Log
+        logMessage(`It dealt ${damage} damage.`);
+
+        if (effectivenessMultiplier > 1) {
+            logMessage("It's super effective!");
+        } else if (effectivenessMultiplier < 1 && effectivenessMultiplier > 0) {
+            logMessage("It's not very effective...");
+        } else if (effectivenessMultiplier === 0) {
+            logMessage(`It doesn't affect ${defender.name}...`);
+        }
+    } else if (move.effect) {
+        console.log("Opponent move has effect (not implemented)"); // Debug Log
+        applyMoveEffect(move, attacker, defender, battle);
+    } else {
+        console.log("Opponent move has no power or effect."); // Debug Log
+        logMessage("But it failed! (No power or effect)");
+    }
+
+    console.log(`Applying ${damage} damage to player. Player HP before: ${defender.currentHp}`); // Debug Log
+    defender.currentHp = Math.max(0, defender.currentHp - damage);
+    console.log(`Player HP after: ${defender.currentHp}`); // Debug Log
+
+    console.log("Updating player HP bar and party display..."); // Debug Log
+    updateHpBar(playerHpBar, defender.currentHp, defender.stats.maxHp);
+    if(playerHpValue) playerHpValue.textContent = `${defender.currentHp} / ${defender.stats.maxHp}`;
+    updatePartyDisplay(); // Update party display in case HP changed
+
+    if (defender.currentHp <= 0) {
+        console.log("Player Pokémon fainted. Checking for others / Ending battle (loss)..."); // Debug Log
+        logMessage(`${defender.name} fainted!`);
+        // TODO: Check if player has other usable Pokémon
+        logMessage("You have no more usable Pokémon!"); // Placeholder
+        endBattle('loss'); // endBattle handles resetting state
+    } else {
+        console.log("Setting turn to player and showing main actions..."); // Debug Log
+        battle.turn = 'player';
+        logMessage("What will you do?");
+        showMainBattleActions(); // Regenerate player actions
+    }
+    console.log("--- opponentTurn END ---"); // Debug Log
 }
 
 function attemptRun() {
@@ -801,6 +1181,91 @@ function resumeGame(loadedState) {
      renderMap();
      updatePartyDisplay();
      logMessage(`Game resumed for ${gameState.currentUser.email}.`);
+}
+
+// NEW function to apply status move effects
+function applyMoveEffect(move, attacker, defender, battle) {
+    console.log(`Applying effect: ${move.effect} for move ${moveData.name}`);
+    let targetPokemon;
+    let targetStages;
+    let targetName;
+    let attackerName = (attacker === battle.playerPokemon) ? attacker.name : `Wild ${attacker.name}`;
+
+    // Determine target and stage object
+    if (move.target === 'self') {
+        targetPokemon = attacker;
+        targetStages = (attacker === battle.playerPokemon) ? battle.playerStatStages : battle.opponentStatStages;
+        targetName = attackerName;
+    } else { // Assume 'opponent' if not 'self'
+        targetPokemon = defender;
+        targetStages = (defender === battle.playerPokemon) ? battle.playerStatStages : battle.opponentStatStages;
+        targetName = (defender === battle.playerPokemon) ? defender.name : `Wild ${defender.name}`;
+    }
+
+    if (!targetPokemon || !targetStages) {
+        console.error("applyMoveEffect: Invalid target or stages object.");
+        logMessage("But it failed! (Target error)");
+        return;
+    }
+
+    // --- Handle Stat Changes --- 
+    if (move.effect === 'lower_stat' || move.effect === 'raise_stat') {
+        const stat = move.stat; // e.g., 'atk', 'def'
+        const stages = move.stages; // e.g., -1, +1, -2
+
+        if (!targetStages.hasOwnProperty(stat)) {
+            console.error(`applyMoveEffect: Target stages object does not have stat: ${stat}`);
+            logMessage("But it failed! (Stat error)");
+            return;
+        }
+
+        const currentStage = targetStages[stat];
+        const statName = { atk: 'Attack', def: 'Defense' /*, speed: 'Speed', accuracy: 'Accuracy', evasion: 'Evasion' */ }[stat] || stat.toUpperCase();
+
+        if (stages < 0) { // Lowering stat
+            if (currentStage <= -6) {
+                logMessage(`${targetName}'s ${statName} won't go any lower!`);
+            } else {
+                targetStages[stat] = Math.max(-6, currentStage + stages);
+                const verb = (stages <= -2) ? "harshly fell" : "fell";
+                logMessage(`${targetName}'s ${statName} ${verb}!`);
+            }
+        } else { // Raising stat
+             if (currentStage >= 6) {
+                logMessage(`${targetName}'s ${statName} won't go any higher!`);
+            } else {
+                targetStages[stat] = Math.min(6, currentStage + stages);
+                 const verb = (stages >= 2) ? "sharply rose" : "rose";
+                logMessage(`${targetName}'s ${statName} ${verb}!`);
+            }
+        }
+        console.log("Updated target stages:", targetStages);
+    }
+    // --- TODO: Handle other effects --- 
+    else if (move.effect === 'poison') {
+        // Check type immunity (Steel, Poison)
+        // Apply poison status if Math.random() < move.chance
+        logMessage(`(${move.effect} effect not fully implemented)`);
+    }
+    else if (move.effect === 'trap') {
+         logMessage(`(${move.effect} effect not fully implemented)`);
+    }
+     else if (move.effect === 'drain') {
+         // Calculate drain amount based on damage dealt (needs damage calculation access)
+         logMessage(`(${move.effect} effect not fully implemented)`);
+    }
+    else if (move.effect === 'confuse') {
+        // Apply confusion status
+         logMessage(`(${move.effect} effect not fully implemented)`);
+    }
+     else if (move.effect === 'flinch') {
+         // Check if attacker went first, apply flinch status for the turn
+         logMessage(`(${move.effect} effect not fully implemented)`);
+    }
+    // ... other effects ...
+    else {
+        logMessage("(Unknown effect)");
+    }
 }
 
 // --- Event Listeners Setup ---
