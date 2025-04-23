@@ -42,19 +42,27 @@
 
         <!-- Main Game Area (Shown after starter selected or game loaded) -->
         <div id="main-game" style="display: none;">
-            <div id="map-area">
-                <div id="map-header">
-                     <h2>Progression Map</h2>
-                     <div id="user-display-map" class="user-info">Logged in as: <span id="user-email-map"></span> <button id="logout-button">Logout</button></div>
+            <div id="map-area" class="screen" style="display: none;">
+                <h2>Map</h2>
+                <div id="user-display-map" style="display: none;">
+                    Logged in as: <span id="user-email-map"></span> 
+                    <button id="logout-button">Logout</button>
                 </div>
-                <!-- Map nodes will be generated here by JS -->
                 <div id="map-nodes">
-                    <!-- Placeholder for map buttons -->
+                    <!-- Map nodes will be generated here -->
                 </div>
-                 <button id="save-game-button-map" disabled>Save Game (DB TODO)</button>
+                <button id="save-game-button-map" disabled>Save Game</button>
             </div>
 
-            <div id="battle-area" style="display: none;">
+            <!-- NEW: Reward Selection Area -->
+            <div id="reward-selection-area" class="screen" style="display: none;">
+                <h2>Choose Your Reward!</h2>
+                <div id="reward-options">
+                    <!-- Reward buttons will be generated here -->
+                </div>
+            </div>
+
+            <div id="battle-area" class="screen" style="display: none;">
                 <h2>Battle!</h2>
                 <div id="opponent-display">
                     <div class="sprite-container" id="opponent-sprite-container">

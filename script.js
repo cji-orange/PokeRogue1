@@ -677,10 +677,10 @@ function renderMap() {
     encounterNode.onclick = () => triggerEncounter();
     mapNodesContainer.appendChild(encounterNode);
 
-    // Enable save button (using localStorage)
+    // Enable save button (using Supabase)
     saveGameButtonMap.disabled = false;
     saveGameButtonMap.textContent = 'Save Game';
-    saveGameButtonMap.onclick = saveGame; // Attach localStorage save function
+    // saveGameButtonMap.onclick = saveGame; // REMOVE THIS LINE - Listener added in addEventListeners
 }
 
 function triggerEncounter() {
@@ -1023,20 +1023,134 @@ function opponentTurn() {
 }
 
 function attemptRun() {
-    // Implementation of attemptRun function
+    // Simple run logic: 50% chance for now
+    const battle = gameState.activeBattle;
+    if (!battle) return;
+    logMessage("You attempt to run...");
+    if (Math.random() < 0.5) { // 50% success rate
+        logMessage("Got away safely!");
+        // Clear battle state and return to map
+        setTimeout(() => endBattle('run_success'), 1000); // Use outcome 'run_success' or similar
+    } else {
+        logMessage("Can't escape!");
+        // Proceed to opponent's turn
+        battle.turn = 'opponent';
+        setTimeout(opponentTurn, 1000);
+    }
 }
 
 function endBattle(outcome) {
-    // Implementation of endBattle function
+    console.log(`--- endBattle START: Outcome: ${outcome} ---`);
+    const battle = gameState.activeBattle;
+    if (!battle) {
+        console.warn("endBattle called but no active battle.");
+        return; // No battle to end
+    }
+
+    // Stop battle animations
+    if (activeSpriteIntervals['player-sprite']) {
+        clearInterval(activeSpriteIntervals['player-sprite']);
+        delete activeSpriteIntervals['player-sprite'];
+    }
+    if (activeSpriteIntervals['opponent-sprite']) {
+        clearInterval(activeSpriteIntervals['opponent-sprite']);
+        delete activeSpriteIntervals['opponent-sprite'];
+    }
+
+    if (outcome === 'win') {
+        logMessage("You won the battle!");
+
+        // --- Grant EXP --- 
+        // Simple EXP calculation (e.g., base amount * opponent level / player level)
+        // Adjust this logic as needed for better balance
+        const baseExpYield = 50; // Placeholder base yield
+        const expGained = Math.max(10, Math.floor((baseExpYield * battle.opponentPokemon.level) / battle.playerPokemon.level));
+        grantExp(battle.playerPokemon, expGained);
+
+        // --- Update Game State --- 
+        gameState.mapProgress++;
+        gameState.activeBattle = null; // Clear battle state
+
+        // --- Transition UI --- 
+        setTimeout(() => { // Delay transition slightly for messages
+            if(battleArea) battleArea.style.display = 'none';
+            if(mapArea) mapArea.style.display = 'block';
+            renderMap(); // Show next map node
+            updatePartyDisplay(); // Refresh display after potential level up
+            // Auto-save after winning a battle?
+             saveGameToDatabase().catch(err => console.error("Failed to auto-save after battle win:", err));
+        }, 1500); // 1.5 second delay
+
+    } else if (outcome === 'loss') {
+        logMessage("You lost the battle...");
+        gameState.activeBattle = null; // Clear battle state
+        setTimeout(showGameOverScreen, 1500); // Transition after delay
+
+    } else if (outcome === 'run_success') {
+        // Outcome used by attemptRun
+        gameState.activeBattle = null; // Clear battle state
+        // --- Transition UI --- 
+        setTimeout(() => { // Delay transition slightly
+            if(battleArea) battleArea.style.display = 'none';
+            if(mapArea) mapArea.style.display = 'block';
+            renderMap(); // Show the same map node again
+            updatePartyDisplay();
+        }, 1000); // 1 second delay
+    } else {
+        // Handle other outcomes? Flee failed implicitly proceeds to opponent turn.
+        console.warn(`endBattle called with unknown outcome: ${outcome}`);
+        gameState.activeBattle = null; // Clear battle state anyway?
+        // Default transition back to map?
+         setTimeout(() => {
+            if(battleArea) battleArea.style.display = 'none';
+            if(mapArea) mapArea.style.display = 'block';
+            renderMap();
+            updatePartyDisplay();
+        }, 1000);
+    }
+     console.log(`--- endBattle END ---`);
 }
 
 // --- EXP and Leveling ---
 function grantExp(pokemon, amount) {
-    // Implementation of grantExp function
+    if (!pokemon || amount <= 0) return;
+    
+    logMessage(`${pokemon.name} gained ${amount} EXP!`);
+    pokemon.exp += amount;
+    
+    checkForLevelUp(pokemon);
+    updatePartyDisplay(); // Update EXP bar display
 }
 
 function checkForLevelUp(pokemon) {
-    // Implementation of checkForLevelUp function
+    if (!pokemon) return;
+    
+    // Check if current EXP meets or exceeds amount needed for next level
+    if (pokemon.exp >= pokemon.expToNextLevel) {
+        pokemon.level++;
+        logMessage(`${pokemon.name} grew to Level ${pokemon.level}!`, 'level-up');
+        
+        // Subtract EXP used for this level
+        pokemon.exp -= pokemon.expToNextLevel;
+        
+        // Calculate EXP needed for the *new* next level
+        pokemon.expToNextLevel = calculateExpToNextLevel(pokemon.level);
+        
+        // Recalculate stats based on new level
+        const oldMaxHp = pokemon.stats.maxHp;
+        pokemon.stats = calculateStats(pokemon.baseStats, pokemon.level);
+        const hpGain = pokemon.stats.maxHp - oldMaxHp;
+        pokemon.currentHp += hpGain; // Increase current HP by the max HP gain
+        pokemon.currentHp = Math.min(pokemon.currentHp, pokemon.stats.maxHp); // Ensure HP doesn't exceed new max
+
+        // TODO: Check for new move learning here
+
+        // Log stat increases (optional)
+        // console.log(`${pokemon.name}'s stats increased! New Max HP: ${pokemon.stats.maxHp}`);
+
+        // Check again in case of multiple level-ups from one EXP gain
+        checkForLevelUp(pokemon); 
+    }
 }
 
 // --- Game Over ---
@@ -1185,7 +1299,7 @@ function resumeGame(loadedState) {
 
 // NEW function to apply status move effects
 function applyMoveEffect(move, attacker, defender, battle) {
-    console.log(`Applying effect: ${move.effect} for move ${moveData.name}`);
+    console.log(`Applying effect: ${move.effect} for move ${move.name}`); // Use move.name if available, or fallback
     let targetPokemon;
     let targetStages;
     let targetName;
@@ -1220,7 +1334,9 @@ function applyMoveEffect(move, attacker, defender, battle) {
         }
 
         const currentStage = targetStages[stat];
-        const statName = { atk: 'Attack', def: 'Defense' /*, speed: 'Speed', accuracy: 'Accuracy', evasion: 'Evasion' */ }[stat] || stat.toUpperCase();
+        // Use a more comprehensive mapping for stat names
+        const statNameMap = { atk: 'Attack', def: 'Defense', spa: 'Sp. Atk', spd: 'Sp. Def', spe: 'Speed', acc: 'Accuracy', eva: 'Evasion' };
+        const statName = statNameMap[stat] || stat.toUpperCase();
 
         if (stages < 0) { // Lowering stat
             if (currentStage <= -6) {
@@ -1424,3 +1540,89 @@ async function handleLogout() {
 // --- Game Start Call ---
 document.addEventListener('DOMContentLoaded', init); 
 document.addEventListener('DOMContentLoaded', init); 
+
+// --- Reward System --- 
+const rewardPool = [
+    { itemId: 'item001', quantity: 1 }, // Potion
+    { itemId: 'item001', quantity: 2 }, // Potion x2
+    { itemId: 'item002', quantity: 1 }, // Poke Ball
+    { itemId: 'item002', quantity: 3 }, // Poke Ball x3
+    // TODO: Add TMs or other items later
+];
+
+function showRewardSelection() {
+    if (!rewardSelectionArea || !rewardOptionsContainer || !itemData) return;
+    
+    // Generate 3 unique reward choices
+    const availableRewards = [...rewardPool]; // Copy pool to avoid modifying original
+    const choices = [];
+    const numChoices = Math.min(3, availableRewards.length); // Show up to 3 choices
+
+    for (let i = 0; i < numChoices; i++) {
+        if (availableRewards.length === 0) break; // Stop if we run out of unique rewards
+        const randomIndex = Math.floor(Math.random() * availableRewards.length);
+        choices.push(availableRewards.splice(randomIndex, 1)[0]); // Remove chosen reward from pool
+    }
+
+    // Display choices as buttons
+    rewardOptionsContainer.innerHTML = ''; // Clear previous options
+    if (choices.length === 0) {
+        rewardOptionsContainer.innerHTML = '<p>No rewards available this time.</p>';
+        // Automatically proceed if no rewards? Or show a button?
+        const proceedButton = document.createElement('button');
+        proceedButton.textContent = "Continue";
+        proceedButton.onclick = () => finishPostBattleFlow(); 
+        rewardOptionsContainer.appendChild(proceedButton);
+    } else {
+        choices.forEach(reward => {
+            const itemInfo = itemData[reward.itemId];
+            if (itemInfo) {
+                const button = document.createElement('button');
+                button.classList.add('reward-choice');
+                button.textContent = `${itemInfo.name} x${reward.quantity}`;
+                button.onclick = () => claimReward(reward.itemId, reward.quantity);
+                rewardOptionsContainer.appendChild(button);
+            } else {
+                console.warn(`Reward item ID ${reward.itemId} not found in itemData.`);
+            }
+        });
+    }
+
+    // Show the reward screen
+    rewardSelectionArea.style.display = 'block';
+}
+
+function claimReward(itemId, quantity) {
+    if (!rewardSelectionArea || !itemData[itemId]) return;
+
+    const itemInfo = itemData[itemId];
+    logMessage(`You received ${itemInfo.name} x${quantity}!`);
+
+    // Add item to inventory (handle stacking)
+    const existingItem = gameState.inventory.find(invItem => invItem.itemId === itemId);
+    if (existingItem) {
+        existingItem.quantity += quantity;
+    } else {
+        // Need to find the base item data again to add all properties
+        const baseItem = itemData[itemId]; 
+        if(baseItem) {
+             // Add itemId explicitly when creating the inventory entry
+             gameState.inventory.push({ ...baseItem, itemId: itemId, quantity: quantity }); 
+        } else {
+            console.error("Could not find base item data for", itemId);
+        }
+    }
+
+    // Hide reward screen and proceed
+    rewardSelectionArea.style.display = 'none';
+    finishPostBattleFlow();
+}
+
+// New function to handle steps after reward claimed (or skipped)
+function finishPostBattleFlow() {
+     updateInventoryDisplay(); // Update inventory display *after* claiming
+     // Transition back to map and save
+     if(mapArea) mapArea.style.display = 'block';
+     renderMap(); 
+     saveGameToDatabase().catch(err => console.error("Failed to auto-save after reward:", err));
+}
