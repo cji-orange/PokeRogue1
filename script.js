@@ -24,20 +24,20 @@ try {
 
 // Placeholder Pokémon Data
 const pokemonData = {
-    'pkm001': { name: 'Bulbasaur', types: ['Grass', 'Poison'], baseStats: { hp: 45, atk: 49, def: 49 }, moves: ['Tackle', 'Growl', 'Vine Whip'], sprite: 'assets/sprites/001.png' },
-    'pkm004': { name: 'Charmander', types: ['Fire'], baseStats: { hp: 39, atk: 52, def: 43 }, moves: ['Scratch', 'Growl', 'Ember'], sprite: 'assets/sprites/004.png' },
-    'pkm007': { name: 'Squirtle', types: ['Water'], baseStats: { hp: 44, atk: 48, def: 65 }, moves: ['Tackle', 'Tail Whip', 'Water Gun'], sprite: 'assets/sprites/007.png' },
+    'pkm001': { name: 'Bobasore', types: ['Grass', 'Poison'], baseStats: { hp: 45, atk: 49, def: 49 }, moves: ['Tackle', 'Growl', 'Vine Whip'], sprite: 'assets/sprites/001.png' },
+    'pkm004': { name: 'Charamander', types: ['Fire'], baseStats: { hp: 39, atk: 52, def: 43 }, moves: ['Scratch', 'Growl', 'Ember'], sprite: 'assets/sprites/004.png' },
+    'pkm007': { name: 'Squirtul', types: ['Water'], baseStats: { hp: 44, atk: 48, def: 65 }, moves: ['Tackle', 'Tail Whip', 'Water Gun'], sprite: 'assets/sprites/007.png' },
     // Non-Starters added:
-     'pkm010': { name: 'Caterpie', types: ['Bug'], baseStats: { hp: 45, atk: 30, def: 35 }, moves: ['Tackle', 'String Shot'], sprite: 'assets/sprites/010.png' },
-     'pkm013': { name: 'Weedle', types: ['Bug', 'Poison'], baseStats: { hp: 40, atk: 35, def: 30 }, moves: ['Poison Sting', 'String Shot'], sprite: 'assets/sprites/013.png' },
-     'pkm016': { name: 'Pidgey', types: ['Normal', 'Flying'], baseStats: { hp: 40, atk: 45, def: 40 }, moves: ['Tackle', 'Sand Attack', 'Gust'], sprite: 'assets/sprites/016.png' },
-     'pkm019': { name: 'Rattata', types: ['Normal'], baseStats: { hp: 30, atk: 56, def: 35 }, moves: ['Tackle', 'Tail Whip', 'Quick Attack'], sprite: 'assets/sprites/019.png' },
-     'pkm021': { name: 'Spearow', types: ['Normal', 'Flying'], baseStats: { hp: 40, atk: 60, def: 30 }, moves: ['Peck', 'Growl', 'Leer'], sprite: 'assets/sprites/021.png' },
-     'pkm023': { name: 'Ekans', types: ['Poison'], baseStats: { hp: 35, atk: 60, def: 44 }, moves: ['Wrap', 'Leer', 'Poison Sting'], sprite: 'assets/sprites/023.png' },
-     'pkm027': { name: 'Sandshrew', types: ['Ground'], baseStats: { hp: 50, atk: 75, def: 85 }, moves: ['Scratch', 'Sand Attack', 'Defense Curl'], sprite: 'assets/sprites/027.png' },
-     'pkm029': { name: 'Nidoran♀', types: ['Poison'], baseStats: { hp: 55, atk: 47, def: 52 }, moves: ['Growl', 'Scratch', 'Poison Sting'], sprite: 'assets/sprites/029.png' },
-     'pkm032': { name: 'Nidoran♂', types: ['Poison'], baseStats: { hp: 46, atk: 57, def: 40 }, moves: ['Leer', 'Peck', 'Poison Sting'], sprite: 'assets/sprites/032.png' },
-     'pkm041': { name: 'Zubat', types: ['Poison', 'Flying'], baseStats: { hp: 40, atk: 45, def: 35 }, moves: ['Leech Life', 'Supersonic', 'Astonish'], sprite: 'assets/sprites/041.png' },
+     'pkm010': { name: 'Catrupi', types: ['Bug'], baseStats: { hp: 45, atk: 30, def: 35 }, moves: ['Tackle', 'String Shot'], sprite: 'assets/sprites/010.png' },
+     'pkm013': { name: 'Widle', types: ['Bug', 'Poison'], baseStats: { hp: 40, atk: 35, def: 30 }, moves: ['Poison Sting', 'String Shot'], sprite: 'assets/sprites/013.png' },
+     'pkm016': { name: 'Piggy', types: ['Normal', 'Flying'], baseStats: { hp: 40, atk: 45, def: 40 }, moves: ['Tackle', 'Sand Attack', 'Gust'], sprite: 'assets/sprites/016.png' },
+     'pkm019': { name: 'Ratatta', types: ['Normal'], baseStats: { hp: 30, atk: 56, def: 35 }, moves: ['Tackle', 'Tail Whip', 'Quick Attack'], sprite: 'assets/sprites/019.png' },
+     'pkm021': { name: 'Speerow', types: ['Normal', 'Flying'], baseStats: { hp: 40, atk: 60, def: 30 }, moves: ['Peck', 'Growl', 'Leer'], sprite: 'assets/sprites/021.png' },
+     'pkm023': { name: 'Ikans', types: ['Poison'], baseStats: { hp: 35, atk: 60, def: 44 }, moves: ['Wrap', 'Leer', 'Poison Sting'], sprite: 'assets/sprites/023.png' },
+     'pkm027': { name: 'Sandshrewd', types: ['Ground'], baseStats: { hp: 50, atk: 75, def: 85 }, moves: ['Scratch', 'Sand Attack', 'Defense Curl'], sprite: 'assets/sprites/027.png' },
+     'pkm029': { name: 'Nidodaran♀', types: ['Poison'], baseStats: { hp: 55, atk: 47, def: 52 }, moves: ['Growl', 'Scratch', 'Poison Sting'], sprite: 'assets/sprites/029.png' },
+     'pkm032': { name: 'Nidodaran♂', types: ['Poison'], baseStats: { hp: 46, atk: 57, def: 40 }, moves: ['Leer', 'Peck', 'Poison Sting'], sprite: 'assets/sprites/032.png' },
+     'pkm041': { name: 'Zoobat', types: ['Poison', 'Flying'], baseStats: { hp: 40, atk: 45, def: 35 }, moves: ['Leech Life', 'Supersonic', 'Astonish'], sprite: 'assets/sprites/041.png' },
 };
 
 // Placeholder Item Data
@@ -147,6 +147,9 @@ const userDisplayMap = document.getElementById('user-display-map');
 const userDisplayGameover = document.getElementById('user-display-gameover');
 const logoutButtonMap = document.getElementById('logout-button');
 const logoutButtonGameover = document.getElementById('logout-button-gameover');
+// Add references for reward screen elements
+const rewardSelectionArea = document.getElementById('reward-selection-area'); 
+const rewardOptionsContainer = document.getElementById('reward-options'); 
 
 // --- Animation Data and Control ---
 
@@ -194,8 +197,9 @@ function startSpriteAnimation(spriteElement, pokemonId, uniqueIntervalId) {
         const basePkmData = pokemonData[pokemonId];
         if (basePkmData) {
             // Special handling for names that don't map directly to folders
-            if (basePkmData.name === 'Nidoran♀') pkmName = 'nidoran_female';
-            else if (basePkmData.name === 'Nidoran♂') pkmName = 'nidoran_male';
+            // Use the NEW names from pokemonData
+            if (basePkmData.name === 'Nidodaran♀') pkmName = 'nidoran_female'; 
+            else if (basePkmData.name === 'Nidodaran♂') pkmName = 'nidoran_male';
             // Generic fallback (might be incorrect for some names)
             else pkmName = basePkmData.name.toLowerCase().replace(' ', '_');
              console.log(`[Sprite Anim] No animData. Using fallback name from pokemonData: ${pkmName}`); // Debug Log
@@ -300,11 +304,12 @@ function init() {
     // but calling it ensures we handle the initial state promptly if the listener setup is delayed.
     checkUserSession(); 
 
-    // Initial UI state before session check completes (show auth screen)
-    showAuthScreen(true);
+    // Ensure all main game screens are hidden initially
+    if(authScreen) authScreen.style.display = 'none'; // Hide auth screen initially too
     if(startScreen) startScreen.style.display = 'none';
     if(mainGame) mainGame.style.display = 'none';
     if(gameOverScreen) gameOverScreen.style.display = 'none';
+    // Let onAuthStateChange handle showing the correct screen based on session
 }
 
 async function checkUserSession() {
@@ -578,7 +583,7 @@ function startNewRun(starterPokemonId) {
     if(mainGame) mainGame.style.display = 'block';
     if(battleArea) battleArea.style.display = 'none';
     if(mapArea) mapArea.style.display = 'block';
-    if(inventoryDisplay) inventoryDisplay.style.display = 'none';
+    if(inventoryDisplay) inventoryDisplay.style.display = 'none'; // Explicitly hide inventory
 
     console.log("New run started:", gameState);
 
@@ -794,15 +799,210 @@ function startBattle(opponentPokemon) {
 }
 
 function showInventory(isBattle = false) {
-    // Implementation of showInventory function
+    console.log("[Debug] showInventory called. isBattle:", isBattle);
+    // Ensure main container is valid
+    if (!inventoryDisplay) {
+        console.error("[Debug] Inventory display element (#inventory-display) NOT found!"); return;
+    }
+    // --- ADDED DIAGNOSTIC LOG ---
+    console.log("[Debug] innerHTML of #inventory-display before finding #item-list:", inventoryDisplay.innerHTML);
+    // --- END DIAGNOSTIC LOG ---
+
+    // Ensure item list UL element is valid
+    const ulItemList = document.getElementById('item-list'); // Re-fetch to be absolutely sure
+    if (!ulItemList) {
+        console.error("[Debug] Item list UL element (#item-list) NOT found within #inventory-display (or globally)! Retrying querySelector within inventoryDisplay...");
+        // Try finding it specifically within inventoryDisplay
+        const ulItemListScoped = inventoryDisplay.querySelector('#item-list');
+        if(!ulItemListScoped){
+            console.error("[Debug] Item list UL element (#item-list) STILL NOT found using querySelector within #inventory-display!"); 
+            return;
+        } else {
+            console.log("[Debug] Found #item-list using querySelector within #inventory-display.");
+            // If found this way, it implies the global getElementById might be stale or there's an ID conflict.
+            // For now, we can proceed with ulItemListScoped, but this indicates a potential issue.
+            // The original `ulItemList` will still be null here, so we need to use ulItemListScoped for this call.
+            ulItemListScoped.innerHTML = ''; // Clear previous items from the UL
+
+            if (!gameState.inventory || gameState.inventory.length === 0) {
+                 const noItemsLi = document.createElement('li');
+                 noItemsLi.textContent = 'No items.';
+                 ulItemListScoped.appendChild(noItemsLi);
+                 console.log("[Debug] Inventory empty, showing 'No items'.");
+            } else {
+                console.log(`[Debug] Populating inventory with ${gameState.inventory.length} items.`);
+                gameState.inventory.forEach((item, index) => {
+                    const listItem = document.createElement('li');
+                    const itemTextSpan = document.createElement('span');
+                    itemTextSpan.textContent = `${item.name} x${item.quantity} - ${item.description || ''}`;
+                    listItem.appendChild(itemTextSpan);
+                    if (item.effect === 'heal' || item.effect === 'catch') { 
+                        const useButton = document.createElement('button');
+                        useButton.textContent = "Use";
+                        useButton.classList.add('use-item-button');
+                        useButton.style.marginLeft = '10px'; 
+                        useButton.onclick = () => {
+                            let target = null;
+                            if (isBattle && gameState.activeBattle) target = gameState.activeBattle.playerPokemon;
+                            useItem(index, target); 
+                        };
+                        listItem.appendChild(useButton);
+                    }
+                    ulItemListScoped.appendChild(listItem);
+                });
+            }
+        }
+    } else {
+        // This block executes if the original document.getElementById('item-list') succeeded.
+        ulItemList.innerHTML = ''; // Clear previous items from the UL
+        if (!gameState.inventory || gameState.inventory.length === 0) {
+            const noItemsLi = document.createElement('li');
+            noItemsLi.textContent = 'No items.';
+            ulItemList.appendChild(noItemsLi);
+            console.log("[Debug] Inventory empty, showing 'No items'.");
+        } else {
+            console.log(`[Debug] Populating inventory with ${gameState.inventory.length} items.`);
+            gameState.inventory.forEach((item, index) => {
+                const listItem = document.createElement('li');
+                const itemTextSpan = document.createElement('span');
+                itemTextSpan.textContent = `${item.name} x${item.quantity} - ${item.description || ''}`;
+                listItem.appendChild(itemTextSpan);
+                if (item.effect === 'heal' || item.effect === 'catch') { 
+                    const useButton = document.createElement('button');
+                    useButton.textContent = "Use";
+                    useButton.classList.add('use-item-button');
+                    useButton.style.marginLeft = '10px'; 
+                    useButton.onclick = () => {
+                        let target = null;
+                        if (isBattle && gameState.activeBattle) target = gameState.activeBattle.playerPokemon;
+                        useItem(index, target); 
+                    };
+                    listItem.appendChild(useButton);
+                }
+                ulItemList.appendChild(listItem);
+            });
+        }
+    }
+
+    // Ensure close button is valid and assign onclick
+    const btnCloseInventory = document.getElementById('close-inventory-button'); 
+    if (!btnCloseInventory) {
+        console.error("[Debug] Close inventory button (#close-inventory-button) NOT found when trying to assign handler!"); 
+    } else {
+        btnCloseInventory.onclick = () => hideInventory(isBattle);
+        console.log("[Debug] Assigned onclick handler to close button.");
+    }
+
+    // Show the main inventory panel
+    inventoryDisplay.style.display = 'block';
 }
 
-function hideInventory() {
+function hideInventory(wasInBattle = false) {
+    console.log("[Debug] hideInventory called. wasInBattle:", wasInBattle);
     if(inventoryDisplay) inventoryDisplay.style.display = 'none';
+
+    // If we hid the inventory while in battle, show the main actions again
+    if (wasInBattle && gameState.activeBattle) {
+        showMainBattleActions();
+    }
 }
 
 function useItem(itemIndex, targetPokemon) {
-    // Implementation of useItem function
+    console.log(`Attempting to use item at index: ${itemIndex}`, gameState.inventory[itemIndex]);
+    const itemToUse = gameState.inventory[itemIndex];
+    const battle = gameState.activeBattle; // Reference active battle
+    let itemUsed = false; // Flag to track if item was successfully used
+    let advanceTurn = false; // Flag to track if turn should advance
+
+    if (!itemToUse) {
+        logMessage("Invalid item selection.");
+        return;
+    }
+
+    // --- Potion Logic --- 
+    if (itemToUse.effect === 'heal') {
+        if (!targetPokemon) {
+            logMessage("Cannot use this item outside of battle or without a target.");
+        } else if (targetPokemon.currentHp >= targetPokemon.stats.maxHp) {
+            logMessage(`${targetPokemon.name}'s HP is already full!`);
+        } else if (targetPokemon.currentHp <= 0) {
+             logMessage(`${targetPokemon.name} has fainted and cannot be healed with this item.`);
+        } else {
+            const hpToRestore = itemToUse.power;
+            const oldHp = targetPokemon.currentHp;
+            targetPokemon.currentHp = Math.min(targetPokemon.stats.maxHp, targetPokemon.currentHp + hpToRestore);
+            const restoredAmount = targetPokemon.currentHp - oldHp;
+            logMessage(`${targetPokemon.name}'s HP was restored by ${restoredAmount}.`);
+            updateHpBar(playerHpBar, targetPokemon.currentHp, targetPokemon.stats.maxHp);
+            if(playerHpValue) playerHpValue.textContent = `${targetPokemon.currentHp} / ${targetPokemon.stats.maxHp}`;
+            updatePartyDisplay(); // Update display in case HP changed
+            itemUsed = true;
+            advanceTurn = true; // Using a Potion uses your turn
+        }
+    }
+    // --- Poke Ball Logic --- 
+    else if (itemToUse.effect === 'catch') {
+        if (!battle || !battle.opponentPokemon) {
+            logMessage("Cannot use this item outside of battle or on a non-wild Pokémon.");
+        } else {
+            logMessage(`You threw a ${itemToUse.name}!`);
+            itemUsed = true; // Throwing the ball uses the item
+            advanceTurn = true; // Throwing a ball uses your turn
+
+            // Calculate catch chance
+            const catchChance = calculateCatchChance(battle.opponentPokemon, itemToUse.power); // item.power acts as ballModifier
+            
+            // Simulate the catch attempt
+            // TODO: Add visual shaking effect later?
+            if (Math.random() < catchChance) {
+                // Catch Success!
+                // End the battle - endBattle handles adding Pokemon etc.
+                setTimeout(() => endBattle('catch_success'), 1000); 
+                 // Don't hide inventory or advance turn here, endBattle handles it
+                 advanceTurn = false; // Battle ends, no opponent turn
+            } else {
+                // Catch Failed
+                logMessage("Oh no! The Pokémon broke free!");
+                // Turn proceeds to opponent
+            }
+        }
+    }
+    // --- TODO: Add other item effects (TMs, status healers, etc.) --- 
+    else {
+        logMessage(`Cannot use ${itemToUse.name} right now.`);
+    }
+
+    // --- Consume Item if Used --- 
+    if (itemUsed) {
+        itemToUse.quantity--;
+        if (itemToUse.quantity <= 0) {
+            gameState.inventory.splice(itemIndex, 1); // Remove item from array
+        }
+        // Update inventory display immediately after use/consumption
+        // Note: showInventory might be called again if still in inventory view
+        updateInventoryDisplay(); 
+    }
+
+    // --- Hide Inventory and Advance Turn (if applicable) --- 
+    if (advanceTurn) {
+        hideInventory(true); // Hide inventory, restore battle actions initially
+        if(battle) { 
+            // Ensure turn proceeds AFTER hiding inventory
+            setTimeout(() => {
+                 if(actionButtonsContainer) actionButtonsContainer.innerHTML = '...'; // Clear actions
+                 battle.turn = 'opponent'; 
+                 opponentTurn(); // Call opponent turn directly (no extra delay needed)
+            }, 100); // Short delay to ensure UI updates
+        } else {
+             // If item used outside battle, just hide inventory
+              hideInventory(false);
+        }
+    } else if (!itemUsed) {
+        // If item wasn't used (e.g., failed Potion), just hide the inventory
+        // Don't advance turn
+        hideInventory(!!battle); // Pass battle status correctly
+    }
+    // If battle ended due to catch, endBattle takes over.
 }
 
 function handlePlayerAction(actionType, value = null) {
@@ -1069,17 +1269,32 @@ function endBattle(outcome) {
 
         // --- Update Game State --- 
         gameState.mapProgress++;
-        gameState.activeBattle = null; // Clear battle state
 
-        // --- Transition UI --- 
-        setTimeout(() => { // Delay transition slightly for messages
+        // --- Passive Healing every 5 battles ---
+        if (gameState.mapProgress > 0 && gameState.mapProgress % 5 === 0) {
+            logMessage("Your Pokémon feel refreshed after a series of battles!", "system-message");
+            gameState.playerParty.forEach(pkm => {
+                if (pkm.currentHp > 0) { // Only heal if not fainted
+                    const healAmount = Math.floor(pkm.stats.maxHp * 0.10);
+                    const oldHp = pkm.currentHp;
+                    pkm.currentHp = Math.min(pkm.stats.maxHp, pkm.currentHp + healAmount);
+                    if (pkm.currentHp > oldHp) {
+                        logMessage(`${pkm.name} recovered ${pkm.currentHp - oldHp} HP!`);
+                    }
+                }
+            });
+            updatePartyDisplay(); // Update display to show HP changes
+        }
+        // --- End Passive Healing ---
+
+        gameState.activeBattle = null; // Clear battle state immediately
+
+        // --- Show Reward Selection --- 
+        console.log("[Debug] Preparing to show reward selection screen after delay..."); // <<< ADDED LOG
+        setTimeout(() => { 
             if(battleArea) battleArea.style.display = 'none';
-            if(mapArea) mapArea.style.display = 'block';
-            renderMap(); // Show next map node
-            updatePartyDisplay(); // Refresh display after potential level up
-            // Auto-save after winning a battle?
-             saveGameToDatabase().catch(err => console.error("Failed to auto-save after battle win:", err));
-        }, 1500); // 1.5 second delay
+            showRewardSelection(); 
+        }, 1500); 
 
     } else if (outcome === 'loss') {
         logMessage("You lost the battle...");
@@ -1096,6 +1311,33 @@ function endBattle(outcome) {
             renderMap(); // Show the same map node again
             updatePartyDisplay();
         }, 1000); // 1 second delay
+    } else if (outcome === 'catch_success') {
+        logMessage(`Gotcha! ${battle.opponentPokemon.name} was caught!`);
+        // Add caught Pokemon to party (if space)
+        if (gameState.playerParty.length < 6) {
+            logMessage(`${battle.opponentPokemon.name} was added to your party.`);
+            // Ensure the caught Pokemon instance is complete before adding
+            const caughtPokemon = { ...battle.opponentPokemon }; // Shallow copy is likely fine here
+            gameState.playerParty.push(caughtPokemon);
+        } else {
+            logMessage("Your party is full! The caught Pokémon was sent to the box (not implemented).");
+            // TODO: Implement PC Box logic later
+        }
+        
+        // Update game state
+        gameState.mapProgress++; // Count catch as progress
+        gameState.activeBattle = null; // Clear battle state
+
+        // Transition UI back to map
+        setTimeout(() => { 
+            if(battleArea) battleArea.style.display = 'none';
+            if(mapArea) mapArea.style.display = 'block';
+            renderMap(); 
+            updatePartyDisplay(); // Show new party member
+            updateInventoryDisplay(); // Refresh inventory (pokeball used)
+            saveGameToDatabase().catch(err => console.error("Failed to auto-save after catch:", err));
+        }, 1500); 
+
     } else {
         // Handle other outcomes? Flee failed implicitly proceeds to opponent turn.
         console.warn(`endBattle called with unknown outcome: ${outcome}`);
@@ -1290,10 +1532,11 @@ function resumeGame(loadedState) {
      if(mainGame) mainGame.style.display = 'block';
      if(battleArea) battleArea.style.display = 'none';
      if(mapArea) mapArea.style.display = 'block';
-     if(inventoryDisplay) inventoryDisplay.style.display = 'none';
+     if(inventoryDisplay) inventoryDisplay.style.display = 'none'; // Explicitly hide inventory
 
      renderMap();
      updatePartyDisplay();
+     updateInventoryDisplay(); // Update content without showing
      logMessage(`Game resumed for ${gameState.currentUser.email}.`);
 }
 
@@ -1539,7 +1782,6 @@ async function handleLogout() {
 
 // --- Game Start Call ---
 document.addEventListener('DOMContentLoaded', init); 
-document.addEventListener('DOMContentLoaded', init); 
 
 // --- Reward System --- 
 const rewardPool = [
@@ -1551,7 +1793,16 @@ const rewardPool = [
 ];
 
 function showRewardSelection() {
-    if (!rewardSelectionArea || !rewardOptionsContainer || !itemData) return;
+    console.log("[Debug] showRewardSelection() called."); // <<< ADDED LOG
+    if (!rewardSelectionArea || !rewardOptionsContainer) {
+        console.error("[Debug] Reward selection area or options container not found!"); // <<< ADDED LOG
+        return;
+    }
+    if (!itemData) {
+        console.error("[Debug] itemData is not defined!"); // <<< ADDED LOG
+        return;
+    }
+    console.log("[Debug] Required elements and itemData found."); // <<< ADDED LOG
     
     // Generate 3 unique reward choices
     const availableRewards = [...rewardPool]; // Copy pool to avoid modifying original
@@ -1589,6 +1840,7 @@ function showRewardSelection() {
     }
 
     // Show the reward screen
+    console.log("[Debug] Setting rewardSelectionArea display to 'block'."); // <<< ADDED LOG
     rewardSelectionArea.style.display = 'block';
 }
 
@@ -1625,4 +1877,67 @@ function finishPostBattleFlow() {
      if(mapArea) mapArea.style.display = 'block';
      renderMap(); 
      saveGameToDatabase().catch(err => console.error("Failed to auto-save after reward:", err));
+}
+
+// --- UI Update Functions ---
+function updateInventoryDisplay() {
+    if (!inventoryDisplay) return;
+    inventoryDisplay.innerHTML = '<h2>Inventory</h2>'; // Clear and add header
+
+    if (!gameState.inventory || gameState.inventory.length === 0) {
+        inventoryDisplay.innerHTML += '<p>No items.</p>';
+    } else {
+        const itemList = document.createElement('ul');
+        gameState.inventory.forEach(item => {
+            // Defensive check for item properties
+            const itemName = item?.name || 'Unknown Item';
+            const itemQuantity = item?.quantity || 0;
+            const itemDescription = item?.description || '';
+            
+            const listItem = document.createElement('li');
+            listItem.textContent = `${itemName} x${itemQuantity} - ${itemDescription}`;
+            // TODO: Add 'Use' button if implementing item use from this display
+            itemList.appendChild(listItem);
+        });
+        inventoryDisplay.appendChild(itemList);
+    }
+     // DO NOT force display: block here. Visibility handled elsewhere.
+     // if (inventoryDisplay) inventoryDisplay.style.display = 'block'; 
+}
+
+function updateUserDisplay(email) {
+    // ... (Existing function)
+}
+
+function showAuthScreen(show = true) {
+    // ... (Existing function)
+}
+
+function showStarterSelectionScreen() {
+    // ... (Existing function)
+}
+
+// --- Helper function for catch chance ---
+function calculateCatchChance(opponent, ballModifier = 1) {
+    // Basic formula approximation - Gen 1 style, simplified
+    // Max HP and Current HP are crucial
+    const maxHp = opponent.stats.maxHp;
+    const currentHp = opponent.currentHp;
+    // TODO: Add status conditions later (e.g., sleep/paralysis increase rate)
+    // TODO: Add base catch rate for the species later
+    const baseRate = 150; // Placeholder base rate (adjust per species later)
+
+    // Ensure HP values are valid
+    if (maxHp <= 0 || currentHp < 0) return 0;
+
+    // Formula component: Higher rate the lower the HP
+    const hpFactor = Math.max(1, Math.floor(((maxHp * 3 - currentHp * 2) * baseRate) / (maxHp * 3)));
+    
+    // Apply ball modifier (e.g., Great Ball = 1.5, Ultra Ball = 2)
+    const modifiedRate = Math.min(255, hpFactor * ballModifier); // Cap at 255
+
+    // Simplified probability check
+    const probability = modifiedRate / 255;
+    console.log(`[Catch Calc] MaxHP:${maxHp}, CurrHP:${currentHp}, BaseRate:${baseRate}, HPFactor:${hpFactor}, BallMod:${ballModifier}, ModRate:${modifiedRate}, Prob:${probability.toFixed(3)}`);
+    return probability;
 }
