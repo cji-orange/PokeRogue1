@@ -1397,11 +1397,58 @@ function checkForLevelUp(pokemon) {
 
 // --- Game Over ---
 function showGameOverScreen() {
-    if(mainGame) mainGame.style.display = 'none';
-    if(battleArea) battleArea.style.display = 'none';
-    if(gameOverScreen) gameOverScreen.style.display = 'block';
-    const finalScoreElement = document.getElementById('final-score');
-    if(finalScoreElement) finalScoreElement.textContent = `Encounters Cleared: ${gameState.mapProgress}`;
+    console.log("[Debug] showGameOverScreen called");
+    if(mainGame) {
+        console.log("[Debug] Hiding mainGame. Current display:", mainGame.style.display);
+        mainGame.style.display = 'none';
+    } else {
+        console.warn("[Debug] mainGame element not found in showGameOverScreen");
+    }
+    if(battleArea) {
+        console.log("[Debug] Hiding battleArea. Current display:", battleArea.style.display);
+        battleArea.style.display = 'none';
+    } else {
+        console.warn("[Debug] battleArea element not found in showGameOverScreen");
+    }
+
+    const gameOverScreenElement = document.getElementById('game-over-screen'); // Fetch fresh reference
+
+    if(gameOverScreenElement) {
+        console.log("[Debug] Showing gameOverScreen. Current display:", gameOverScreenElement.style.display);
+        gameOverScreenElement.style.display = 'block';
+        console.log("[Debug] gameOverScreen display after set:", gameOverScreenElement.style.display);
+        
+        const finalScoreElement = document.getElementById('final-score');
+        if(finalScoreElement) {
+            finalScoreElement.textContent = `Encounters Cleared: ${gameState.mapProgress}`;
+            console.log("[Debug] Set final score. Score element content:", finalScoreElement.textContent);
+        } else {
+            console.warn("[Debug] finalScoreElement not found in showGameOverScreen");
+        }
+
+        // Check for restart button specifically within the game over screen
+        const restartBtn = gameOverScreenElement.querySelector('#restart-button'); // More robust query
+        if (restartBtn) {
+            console.log("[Debug] Restart button found within gameOverScreen.");
+            // Check if it's visible (simple check, CSS could still hide it)
+            if (restartBtn.offsetParent === null) {
+                console.warn("[Debug] Restart button found, but might be hidden by CSS (offsetParent is null).");
+            } else {
+                console.log("[Debug] Restart button appears to be visible.");
+            }
+        } else {
+            console.warn("[Debug] Restart button (#restart-button) not found within gameOverScreen.");
+        }
+
+    } else {
+        // This is a critical issue if the game-over-screen element itself is not found
+        console.error("CRITICAL: gameOverScreen element (ID: 'game-over-screen') NOT FOUND in showGameOverScreen!");
+        // Fallback: Try to ensure other screens are hidden if game over can't be shown
+        if(mainGame) mainGame.style.display = 'none';
+        if(battleArea) battleArea.style.display = 'none';
+        if(startScreen) startScreen.style.display = 'block'; // Maybe revert to start screen if game over fails?
+        alert("Game Over! (Display error occurred, please check console for details)");
+    }
 }
 
 function restartGame() {
