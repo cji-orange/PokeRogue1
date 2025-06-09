@@ -1302,7 +1302,11 @@ function endBattle(outcome) {
     } else if (outcome === 'loss') {
         logMessage("You lost the battle...");
         gameState.activeBattle = null; // Clear battle state
-        setTimeout(showGameOverScreen, 1500); // Transition after delay
+        // --- Show Reward Selection instead of Game Over ---
+        setTimeout(() => { 
+            if(battleArea) battleArea.style.display = 'none';
+            showRewardSelection(); 
+        }, 1500); 
 
     } else if (outcome === 'run_success') {
         // Outcome used by attemptRun
