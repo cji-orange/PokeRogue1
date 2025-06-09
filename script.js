@@ -1425,7 +1425,7 @@ function checkForLevelUp(pokemon) {
 
 // --- Game Over ---
 function showGameOverScreen() {
-    if(mainGame) mainGame.style.display = 'none';
+    if(mainGame) mainGame.style.display = 'block';
     if(battleArea) battleArea.style.display = 'none';
     if(gameOverScreen) gameOverScreen.style.display = 'block';
     const finalScoreElement = document.getElementById('final-score');
