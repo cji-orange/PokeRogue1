@@ -1,72 +1,43 @@
 Caterpie:
-    Total height: 118 pixels
+    Total height: 210 pixels
     number of frames: 6
-    Size of each frame (estimates):
-        Frame 1: 102 x 118
-        Frame 2: 91 x 118
-        Frame 3: 100 x 118
-        Frame 4: 125 x 118
-        Frame 5: 130 x 118
-        Frame 6: 160 x 118
     Frame flipping pattern: 1-2-3-4-5-6-5-4-3-2-1
 Ekans:
-    Total height: 152 pixels
+    Total height: 174 pixels
     number of frames: 12
-    Size of each frame (estimates): about 130 x 152 each, with the frames at the end growing gradually larger
     Frame flipping pattern: 1-2-3-4-5-6-7-8-9-10-11-12-11-10-9-8-7-6-5-4-3-2-1
 Nidoran female:
-    Total height: 176 pixels
+    Total height: 182 pixels
     number of frames: 4
-    Size of each frame (estimates): about 194 x 176 each
     Frame flipping pattern: 1-2-3-4-3-2-1
 Nidoran male:
-    Total height: 168 pixels
+    Total height: 212 pixels
     number of frames: 4
-    Size of each frame (estimates): about 140 x 168 each, with the frames at the end growing gradually larger
     Frame flipping pattern: 1-2-3-4-3-2-1
 Pidgey:
-    Total height: 210 pixels
+    Total height: 194 pixels
     number of frames: 9
-    Size of each frame (estimates): 
-        Frame 1: 160 x 210
-        Frame 2: 160 x 210
-        Frame 3: 163 x 210
-        Frame 4: 180 x 210
-        Frame 5: 175 x 210
-        Frame 6: 215 x 210
-        Frame 7: 216 x 210
-        Frame 8: 165 x 210
-        Frame 9: 190 x 210
     Frame flipping pattern: 1-2-3-4-5-6-7-8-9-8-7-6-5-4-3-2-1
 Rattata:
-    Total height: 182 pixels
+    Total height: 190 pixels
     number of frames: 7
-    Size of each frame (estimates): about 145 x 182 each, exept first frame which is about 160 x 182
     Frame flipping pattern: 1-2-3-4-5-6-7-6-5-4-3-2-1
 Sandshrew:
-    Total height: 180 pixels
+    Total height: 196 pixels
     number of frames: 4
-    Size of each frame (estimates):
-        Frame 1: 173 x 180
-        Frame 2: 168 x 180
-        Frame 3: 180 x 180
-        Frame 4: 260 x 180 (But the last 75 pixels are empty space)
     Frame flipping pattern: 1-2-3-4-3-2-1
 Spearow:
-    Total height: 114 pixels
+    Total height: 214 pixels
     number of frames: 4
-    Size of each frame (estimates): about 118 x 114 for first and third, about 130 x 114 for second and fourth
     Frame flipping pattern: 1-2-3-4-3-2-1
 Weedle:
-    Total height: 158 pixels
+    Total height: 248 pixels
     number of frames: 11
-    Size of each frame (estimates): 
-        Frames 1-5: about 111 x 158
-        Frame 6: 122 x 158
-        Frame 7: 136 x 158
-        Frame 8: 145 x 158
-        Frame 9: 160 x 158
-        Frame 10: 163 x 158
-        Frame 11: 170 x 158
     Frame flipping pattern: 1-2-3-4-5-6-7-8-9-10-11-10-9-8-7-6-5-4-3-2-1
+Zubat:
+    Total height: 202 pixels
+    number of frames: 4
+    Frame flipping pattern: 1-2-3-4-3-2-1
+
+
 

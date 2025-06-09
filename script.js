@@ -1269,25 +1269,28 @@ function endBattle(outcome) {
 
         // --- Update Game State --- 
         gameState.mapProgress++;
+        gameState.activeBattle = null; // Clear battle state immediately
 
-        // --- Passive Healing every 5 battles ---
-        if (gameState.mapProgress > 0 && gameState.mapProgress % 5 === 0) {
-            logMessage("Your Pokémon feel refreshed after a series of battles!", "system-message");
+        // --- Every 5 battles, heal party ---
+        if (gameState.mapProgress % 5 === 0) {
+            let healedAny = false;
             gameState.playerParty.forEach(pkm => {
-                if (pkm.currentHp > 0) { // Only heal if not fainted
-                    const healAmount = Math.floor(pkm.stats.maxHp * 0.10);
+                if (pkm.currentHp > 0 && pkm.currentHp < pkm.stats.maxHp) {
+                    const healAmount = Math.ceil(pkm.stats.maxHp * 0.10);
                     const oldHp = pkm.currentHp;
                     pkm.currentHp = Math.min(pkm.stats.maxHp, pkm.currentHp + healAmount);
-                    if (pkm.currentHp > oldHp) {
-                        logMessage(`${pkm.name} recovered ${pkm.currentHp - oldHp} HP!`);
+                    const actualHealed = pkm.currentHp - oldHp;
+                    if (actualHealed > 0) {
+                        logMessage(`${pkm.name} healed ${actualHealed} HP!`, 'level-up');
+                        healedAny = true;
                     }
                 }
             });
-            updatePartyDisplay(); // Update display to show HP changes
+            if (healedAny) {
+                logMessage("Your team was healed by 10% after 5 battles!", 'level-up');
+                updatePartyDisplay();
+            }
         }
-        // --- End Passive Healing ---
-
-        gameState.activeBattle = null; // Clear battle state immediately
 
         // --- Show Reward Selection --- 
         console.log("[Debug] Preparing to show reward selection screen after delay..."); // <<< ADDED LOG
@@ -1327,6 +1330,27 @@ function endBattle(outcome) {
         // Update game state
         gameState.mapProgress++; // Count catch as progress
         gameState.activeBattle = null; // Clear battle state
+
+        // --- Every 5 battles, heal party ---
+        if (gameState.mapProgress % 5 === 0) {
+            let healedAny = false;
+            gameState.playerParty.forEach(pkm => {
+                if (pkm.currentHp > 0 && pkm.currentHp < pkm.stats.maxHp) {
+                    const healAmount = Math.ceil(pkm.stats.maxHp * 0.10);
+                    const oldHp = pkm.currentHp;
+                    pkm.currentHp = Math.min(pkm.stats.maxHp, pkm.currentHp + healAmount);
+                    const actualHealed = pkm.currentHp - oldHp;
+                    if (actualHealed > 0) {
+                        logMessage(`${pkm.name} healed ${actualHealed} HP!`, 'level-up');
+                        healedAny = true;
+                    }
+                }
+            });
+            if (healedAny) {
+                logMessage("Your team was healed by 10% after 5 battles!", 'level-up');
+                updatePartyDisplay();
+            }
+        }
 
         // Transition UI back to map
         setTimeout(() => { 
@@ -1397,58 +1421,11 @@ function checkForLevelUp(pokemon) {
 
 // --- Game Over ---
 function showGameOverScreen() {
-    console.log("[Debug] showGameOverScreen called");
-    if(mainGame) {
-        console.log("[Debug] Hiding mainGame. Current display:", mainGame.style.display);
-        mainGame.style.display = 'none';
-    } else {
-        console.warn("[Debug] mainGame element not found in showGameOverScreen");
-    }
-    if(battleArea) {
-        console.log("[Debug] Hiding battleArea. Current display:", battleArea.style.display);
-        battleArea.style.display = 'none';
-    } else {
-        console.warn("[Debug] battleArea element not found in showGameOverScreen");
-    }
-
-    const gameOverScreenElement = document.getElementById('game-over-screen'); // Fetch fresh reference
-
-    if(gameOverScreenElement) {
-        console.log("[Debug] Showing gameOverScreen. Current display:", gameOverScreenElement.style.display);
-        gameOverScreenElement.style.display = 'block';
-        console.log("[Debug] gameOverScreen display after set:", gameOverScreenElement.style.display);
-        
-        const finalScoreElement = document.getElementById('final-score');
-        if(finalScoreElement) {
-            finalScoreElement.textContent = `Encounters Cleared: ${gameState.mapProgress}`;
-            console.log("[Debug] Set final score. Score element content:", finalScoreElement.textContent);
-        } else {
-            console.warn("[Debug] finalScoreElement not found in showGameOverScreen");
-        }
-
-        // Check for restart button specifically within the game over screen
-        const restartBtn = gameOverScreenElement.querySelector('#restart-button'); // More robust query
-        if (restartBtn) {
-            console.log("[Debug] Restart button found within gameOverScreen.");
-            // Check if it's visible (simple check, CSS could still hide it)
-            if (restartBtn.offsetParent === null) {
-                console.warn("[Debug] Restart button found, but might be hidden by CSS (offsetParent is null).");
-            } else {
-                console.log("[Debug] Restart button appears to be visible.");
-            }
-        } else {
-            console.warn("[Debug] Restart button (#restart-button) not found within gameOverScreen.");
-        }
-
-    } else {
-        // This is a critical issue if the game-over-screen element itself is not found
-        console.error("CRITICAL: gameOverScreen element (ID: 'game-over-screen') NOT FOUND in showGameOverScreen!");
-        // Fallback: Try to ensure other screens are hidden if game over can't be shown
-        if(mainGame) mainGame.style.display = 'none';
-        if(battleArea) battleArea.style.display = 'none';
-        if(startScreen) startScreen.style.display = 'block'; // Maybe revert to start screen if game over fails?
-        alert("Game Over! (Display error occurred, please check console for details)");
-    }
+    if(mainGame) mainGame.style.display = 'none';
+    if(battleArea) battleArea.style.display = 'none';
+    if(gameOverScreen) gameOverScreen.style.display = 'block';
+    const finalScoreElement = document.getElementById('final-score');
+    if(finalScoreElement) finalScoreElement.textContent = `Encounters Cleared: ${gameState.mapProgress}`;
 }
 
 function restartGame() {
