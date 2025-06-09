@@ -1901,6 +1901,7 @@ function finishPostBattleFlow() {
      if(mapArea) mapArea.style.display = 'block';
      renderMap(); 
      saveGameToDatabase().catch(err => console.error("Failed to auto-save after reward:", err));
+     console.log("Setting mainGame to display: block");
      if(mainGame) mainGame.style.display = 'block';
 }
 
